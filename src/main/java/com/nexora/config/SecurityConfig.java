@@ -32,7 +32,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/stocks/**", "/api/market/**", "/api/ipo/listings").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/stocks/**", "/api/market/**", "/api/ipo/listings", "/api/ai-discovery/stocks/**").permitAll()
                 .requestMatchers("/api/admin/seed-price-history").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/**").authenticated()

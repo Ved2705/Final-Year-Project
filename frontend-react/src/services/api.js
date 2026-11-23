@@ -163,4 +163,27 @@ export const reportsAPI = {
   getPortfolioTrend: (userId) => api.get(`/reports/portfolio-trend/${userId}`),
 };
 
+// ========== AI STOCK DISCOVERY & INSIGHTS ==========
+export const aiDiscoveryAPI = {
+  createAnalysis: (data) => api.post('/ai-discovery/analyses', data),
+  getAnalysis: (id) => api.get(`/ai-discovery/analyses/${id}`),
+  getRecommendations: (id) => api.get(`/ai-discovery/analyses/${id}/recommendations`),
+  getStockResearch: (symbol) => api.get(`/ai-discovery/stocks/${symbol}/research`),
+  compareCandidates: (data) => api.post('/ai-discovery/compare', data),
+};
+
+export const aiAssistantAPI = {
+  chat: (data) => api.post('/ai-assistant/chat', data),
+};
+
+export const watchlistAPI = {
+  getAll: () => api.get('/watchlist'),
+  add: (data) => api.post('/watchlist', data),
+  remove: (instrumentId) => api.delete(`/watchlist/${instrumentId}`),
+};
+
+export const portfolioInsightsAPI = {
+  getInsights: () => api.get('/portfolio/insights'),
+};
+
 export default api;

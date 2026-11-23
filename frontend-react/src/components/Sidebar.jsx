@@ -5,7 +5,7 @@ import {
   IoReceiptOutline, IoRocketOutline, IoCashOutline, IoNotificationsOutline,
   IoHelpCircleOutline, IoPersonOutline, IoBusinessOutline, IoStatsChartOutline,
   IoPeopleOutline, IoSettingsOutline, IoShieldCheckmarkOutline, IoDocumentTextOutline,
-  IoBarChartOutline, IoLayersOutline, IoSwapHorizontalOutline,
+  IoBarChartOutline, IoLayersOutline, IoSwapHorizontalOutline, IoSparklesOutline,
 } from 'react-icons/io5';
 import './Sidebar.css';
 
@@ -16,6 +16,7 @@ const Sidebar = ({ collapsed, onToggle }) => {
 
   const investorLinks = [
     { to: '/investor/dashboard', icon: <IoGridOutline />, label: 'Dashboard' },
+    { to: '/investor/discovery', icon: <IoSparklesOutline />, label: 'AI Discovery' },
     { to: '/investor/market', icon: <IoTrendingUpOutline />, label: 'Market' },
     { to: '/investor/portfolio', icon: <IoBriefcaseOutline />, label: 'Portfolio' },
     { to: '/investor/orders', icon: <IoReceiptOutline />, label: 'Orders' },

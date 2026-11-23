@@ -66,7 +66,59 @@ const InvestorDashboard = () => {
         </div>
       </div>
 
-      {/* KYC Banner */}
+      {/* AI Discovery Hero Banner */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(30, 41, 59, 0.9) 100%)',
+        border: '1px solid rgba(0, 212, 255, 0.35)',
+        borderRadius: '14px',
+        padding: '16px 20px',
+        marginBottom: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px',
+        boxShadow: '0 4px 20px rgba(0, 212, 255, 0.12)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{
+            fontSize: '1.6rem',
+            background: 'rgba(0, 212, 255, 0.2)',
+            width: '46px',
+            height: '46px',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#00d4ff'
+          }}>
+            ✨
+          </div>
+          <div>
+            <h4 style={{ margin: 0, color: '#f8fafc', fontSize: '1.05rem', fontWeight: '700' }}>
+              AI Stock Discovery & Portfolio Insights
+            </h4>
+            <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.85rem' }}>
+              Evaluate target sectors, 100-point multi-factor scores, and avoid sector over-concentration.
+            </p>
+          </div>
+        </div>
+        <Link to="/investor/discovery" style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: '#00d4ff',
+          color: '#080d1a',
+          padding: '9px 18px',
+          borderRadius: '10px',
+          fontWeight: '700',
+          fontSize: '0.88rem',
+          textDecoration: 'none',
+          boxShadow: '0 2px 10px rgba(0, 212, 255, 0.35)'
+        }}>
+          Explore AI Discovery →
+        </Link>
+      </div>
       {!kycApproved && (
         <div className="kyc-banner">
           <span className="kyc-icon">⚠️</span>

@@ -13,6 +13,7 @@ import KYC from './pages/KYC';
 
 // Investor Pages
 import InvestorDashboard from './pages/investor/InvestorDashboard';
+import AIDiscovery from './pages/investor/AIDiscovery';
 import Market from './pages/investor/Market';
 import StockDetail from './pages/investor/StockDetail';
 import Portfolio from './pages/investor/Portfolio';
@@ -57,6 +58,7 @@ function App() {
           </ProtectedRoute>
         }>
           <Route path="dashboard" element={<InvestorDashboard />} />
+          <Route path="discovery" element={<AIDiscovery />} />
           <Route path="market" element={<Market />} />
           <Route path="stock/:symbol" element={<StockDetail />} />
           <Route path="portfolio" element={<Portfolio />} />
