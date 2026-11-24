@@ -27,30 +27,29 @@ public class MarketDataService implements CommandLineRunner {
     private final StockRepository stockRepository;
 
     @Override
-    @Transactional
     public void run(String... args) {
         seedInitialInstrumentsAndSnapshots();
     }
 
-    @Transactional
     public void seedInitialInstrumentsAndSnapshots() {
         log.info("Synchronizing verified Nexora platform stocks for AI Stock Discovery...");
 
-        // 1. Purge legacy external non-NEXORA instruments (e.g. NSE entries)
+        // 1. Mark legacy external non-NEXORA instruments inactive to avoid foreign key constraints
         try {
             List<Instrument> external = instrumentRepository.findAll().stream()
                     .filter(i -> !"NEXORA".equalsIgnoreCase(i.getExchange()))
                     .toList();
             if (!external.isEmpty()) {
-                log.info("Purging {} legacy external market instruments to ensure AI only recommends Nexora platform stocks...", external.size());
+                log.info(
+                        "Deactivating {} legacy external market instruments to ensure AI only recommends Nexora platform stocks...",
+                        external.size());
                 for (Instrument ext : external) {
-                    List<MarketDataSnapshot> snaps = marketDataSnapshotRepository.findByInstrumentId(ext.getId());
-                    marketDataSnapshotRepository.deleteAll(snaps);
-                    instrumentRepository.delete(ext);
+                    ext.setInstrumentStatus(Instrument.InstrumentStatus.DELISTED);
+                    instrumentRepository.save(ext);
                 }
             }
         } catch (Exception e) {
-            log.warn("Could not clean up external non-platform instruments: {}", e.getMessage());
+            log.warn("Could not deactivate external non-platform instruments: {}", e.getMessage());
         }
 
         // 2. Import all Nexora platform stocks into instruments
@@ -60,8 +59,8 @@ public class MarketDataService implements CommandLineRunner {
     }
 
     private void createSeedInstrument(String symbol, String exchange, String name, String sector, String industry,
-                                      String desc, BigDecimal price, BigDecimal marketCap, LocalDate asOfDate,
-                                      Map<String, BigDecimal> metrics) {
+            String desc, BigDecimal price, BigDecimal marketCap, LocalDate asOfDate,
+            Map<String, BigDecimal> metrics) {
         Instrument instrument = instrumentRepository.save(Instrument.builder()
                 .symbol(symbol)
                 .exchange(exchange)
@@ -118,9 +117,12 @@ public class MarketDataService implements CommandLineRunner {
                         .build());
 
                 // Seed synthetic conservative fundamental snapshot based on revenue
-                BigDecimal rev = s.getStartup().getRevenue() != null ? s.getStartup().getRevenue() : BigDecimal.valueOf(10000000);
-                BigDecimal val = s.getStartup().getValuation() != null ? s.getStartup().getValuation() : BigDecimal.valueOf(50000000);
-                BigDecimal pe = val.divide(rev.multiply(new BigDecimal("0.15")), 2, java.math.RoundingMode.HALF_UP).max(new BigDecimal("15.0"));
+                BigDecimal rev = s.getStartup().getRevenue() != null ? s.getStartup().getRevenue()
+                        : BigDecimal.valueOf(10000000);
+                BigDecimal val = s.getStartup().getValuation() != null ? s.getStartup().getValuation()
+                        : BigDecimal.valueOf(50000000);
+                BigDecimal pe = val.divide(rev.multiply(new BigDecimal("0.15")), 2, java.math.RoundingMode.HALF_UP)
+                        .max(new BigDecimal("15.0"));
 
                 marketDataSnapshotRepository.save(MarketDataSnapshot.builder()
                         .instrument(inst).metricKey("ROE").metricValue(new BigDecimal("21.50"))
@@ -147,15 +149,23 @@ public class MarketDataService implements CommandLineRunner {
     }
 
     public String mapStartupIndustry(String ind) {
-        if (ind == null) return "Information Technology";
+        if (ind == null)
+            return "Information Technology";
         String upper = ind.toUpperCase();
-        if (upper.contains("TECH") || upper.contains("AI") || upper.contains("SOFTWARE")) return "Information Technology";
-        if (upper.contains("HEALTH") || upper.contains("BIO") || upper.contains("MED")) return "Healthcare";
-        if (upper.contains("FIN")) return "Banking & Financial Services";
-        if (upper.contains("ENERGY") || upper.contains("SOLAR") || upper.contains("RENEW")) return "Energy";
-        if (upper.contains("AUTO") || upper.contains("MOTOR") || upper.contains("EV")) return "Automobiles";
-        if (upper.contains("AGRI") || upper.contains("LOGISTICS") || upper.contains("IND")) return "Industrials";
-        if (upper.contains("COMM") || upper.contains("TEL")) return "Telecommunications";
+        if (upper.contains("TECH") || upper.contains("AI") || upper.contains("SOFTWARE"))
+            return "Information Technology";
+        if (upper.contains("HEALTH") || upper.contains("BIO") || upper.contains("MED"))
+            return "Healthcare";
+        if (upper.contains("FIN"))
+            return "Banking & Financial Services";
+        if (upper.contains("ENERGY") || upper.contains("SOLAR") || upper.contains("RENEW"))
+            return "Energy";
+        if (upper.contains("AUTO") || upper.contains("MOTOR") || upper.contains("EV"))
+            return "Automobiles";
+        if (upper.contains("AGRI") || upper.contains("LOGISTICS") || upper.contains("IND"))
+            return "Industrials";
+        if (upper.contains("COMM") || upper.contains("TEL"))
+            return "Telecommunications";
         return "Information Technology";
     }
 

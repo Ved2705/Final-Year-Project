@@ -47,36 +47,43 @@ const FounderDashboard = () => {
       <div style={{ marginBottom: '32px' }}>
         <h3 style={{ marginBottom: '16px' }}>My Startups</h3>
         <div className="grid-2">
-          {myStartups.map((s) => (
-            <div key={s.id} className="card" style={{ padding: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-                <div className="stock-mini-logo" style={{ width: '52px', height: '52px', borderRadius: '14px', fontSize: '1.2rem' }}>{s.symbol[0]}</div>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ marginBottom: '4px' }}>{s.name}</h3>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <span className="mono text-muted" style={{ fontSize: '0.8rem' }}>{s.symbol}</span>
-                    <span className={`badge ${getStatusBadgeClass(s.status)}`}>{s.status}</span>
-                    <span className="badge badge-cyan">{s.stage.replace('_', ' ')}</span>
+          {myStartups.map((s) => {
+            const sym = s.stockSymbol || s.symbol || (s.name ? s.name.substring(0, 4).toUpperCase() : 'STK');
+            return (
+              <div key={s.id} className="card" style={{ padding: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
+                  <div className="stock-mini-logo" style={{ width: '52px', height: '52px', borderRadius: '14px', fontSize: '1.2rem' }}>
+                    {sym[0]}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{ marginBottom: '4px' }}>{s.name}</h3>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <span className="mono text-muted" style={{ fontSize: '0.8rem' }}>{sym}</span>
+                      <span className={`badge ${getStatusBadgeClass(s.status)}`}>{s.status}</span>
+                      <span className="badge badge-cyan">{s.stage ? s.stage.replace('_', ' ') : 'SEED'}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="info-grid" style={{ marginBottom: '16px' }}>
-                <div className="info-item"><div className="info-label">Valuation</div><div className="info-value">{formatINR(s.valuation)}</div></div>
-                <div className="info-item"><div className="info-label">Revenue</div><div className="info-value">{formatINR(s.revenue)}</div></div>
-                <div className="info-item"><div className="info-label">Stock Price</div><div className="info-value">₹{s.stockPrice?.toFixed(2) || '0.00'}</div></div>
-                <div className="info-item">
-                  <div className="info-label">Employees</div>
-                  <div className="info-value">{s.employeeCount || 0}</div>
+                <div className="info-grid" style={{ marginBottom: '16px' }}>
+                  <div className="info-item"><div className="info-label">Valuation</div><div className="info-value">{formatINR(s.valuation)}</div></div>
+                  <div className="info-item"><div className="info-label">Revenue</div><div className="info-value">{formatINR(s.revenue)}</div></div>
+                  <div className="info-item"><div className="info-label">Stock Price</div><div className="info-value">₹{s.stockPrice ? s.stockPrice.toFixed(2) : '0.00'}</div></div>
+                  <div className="info-item">
+                    <div className="info-label">Employees</div>
+                    <div className="info-value">{s.employeeCount || 0}</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <Link to={`/founder/startup/${s.id}`} className="btn btn-primary btn-sm" style={{ flex: 1 }}>Manage <IoArrowForwardOutline /></Link>
+                  {(s.stockSymbol || s.symbol) && (
+                    <Link to={`/investor/stock/${s.stockSymbol || s.symbol}`} className="btn btn-ghost btn-sm">View Stock</Link>
+                  )}
                 </div>
               </div>
-
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <Link to={`/founder/startup/${s.id}`} className="btn btn-primary btn-sm" style={{ flex: 1 }}>Manage <IoArrowForwardOutline /></Link>
-                <Link to={`/investor/stock/${s.symbol}`} className="btn btn-ghost btn-sm">View Stock</Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

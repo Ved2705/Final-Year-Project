@@ -25,6 +25,14 @@ public class AdminSeederController {
     private final StockRepository stockRepository;
     private final PriceHistoryRepository priceHistoryRepository;
     private final com.nexora.service.StockCatalogSeederService stockCatalogSeederService;
+    private final com.nexora.service.DataSeederService dataSeederService;
+
+    @org.springframework.web.bind.annotation.GetMapping("/seed-users")
+    @PostMapping("/seed-users")
+    public ResponseEntity<String> seedUsers() {
+        dataSeederService.seedMissingDefaultUsers();
+        return ResponseEntity.ok("Successfully verified and seeded default founders and investors!");
+    }
 
     @org.springframework.web.bind.annotation.GetMapping("/seed-all-stocks")
     @PostMapping("/seed-all-stocks")

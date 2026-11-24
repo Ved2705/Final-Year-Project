@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/health", "/api/health", "/api/status").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/stocks/**", "/api/market/**", "/api/ipo/listings", "/api/ai-discovery/stocks/**").permitAll()
-                .requestMatchers("/api/admin/seed-price-history", "/api/admin/seed-all-stocks").permitAll()
+                .requestMatchers("/api/admin/seed-price-history", "/api/admin/seed-all-stocks", "/api/admin/seed-users").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
