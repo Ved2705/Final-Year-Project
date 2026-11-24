@@ -35,7 +35,8 @@ public class MarketDataService implements CommandLineRunner {
     @Transactional
     public void seedInitialInstrumentsAndSnapshots() {
         if (instrumentRepository.count() > 0) {
-            log.info("Market instruments already seeded, checking for updates...");
+            log.info("Market instruments already seeded, syncing any new platform stocks...");
+            importNexoraPlatformStocks(LocalDate.now().minusDays(1));
             return;
         }
 
