@@ -9,10 +9,10 @@ services:
     dockerContext: .
     plan: free
     region: oregon
-    healthCheckPath: /api/stocks
+    healthCheckPath: /health
     envVars:
       - key: PORT
-        value: 8080
+        value: 10000
       - key: SPRING_DATASOURCE_URL
         sync: false # Set in Render dashboard: jdbc:mysql://<host>:<port>/<dbname>?useSSL=true&allowPublicKeyRetrieval=true
       - key: SPRING_DATASOURCE_USERNAME
