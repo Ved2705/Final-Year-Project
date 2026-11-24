@@ -7,6 +7,20 @@ const AdminStocks = () => {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
+  const [seeding, setSeeding] = useState(false);
+
+  const handleSeedAllStocks = async () => {
+    try {
+      setSeeding(true);
+      const res = await stocksAPI.seedAllStocks();
+      alert(res.data || 'Successfully seeded stocks!');
+      fetchStocks();
+    } catch (err) {
+      alert('Seeding error: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   const fetchStocks = async () => {
     try {
@@ -54,7 +68,28 @@ const AdminStocks = () => {
 
   return (
     <div className="page-container animate-fade-in">
-      <div className="page-header"><h1 className="page-title">Stock Management</h1></div>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 className="page-title">Stock Management</h1>
+        <button
+          className="btn btn-primary"
+          onClick={handleSeedAllStocks}
+          disabled={seeding}
+          style={{
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            border: 'none',
+            padding: '10px 18px',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            color: '#fff',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          {seeding ? '⚡ Seeding Stocks...' : '⚡ Seed 120 Stocks Catalog'}
+        </button>
+      </div>
       <div className="table-container">
         <table className="table">
           <thead><tr><th>Symbol</th><th>Startup</th><th>Price</th><th>Day Change</th><th>Total Shares</th><th>Circulating</th><th>Volume</th><th>Status</th><th>Actions</th></tr></thead>

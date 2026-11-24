@@ -80,6 +80,7 @@ export const stocksAPI = {
   update: (id, data) => api.put(`/stocks/${id}`, data),
   updateStatus: (id, status) => status === 'HALTED' ? api.put(`/admin/stocks/${id}/halt`) : api.put(`/admin/stocks/${id}/activate`),
   getPriceHistory: (stockId, params) => api.get(`/stocks/${stockId}/price-history`, { params }),
+  seedAllStocks: () => api.get('/admin/seed-all-stocks'),
 };
 
 // ========== ORDERS ==========

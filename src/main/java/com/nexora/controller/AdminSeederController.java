@@ -24,6 +24,14 @@ public class AdminSeederController {
 
     private final StockRepository stockRepository;
     private final PriceHistoryRepository priceHistoryRepository;
+    private final com.nexora.service.StockCatalogSeederService stockCatalogSeederService;
+
+    @org.springframework.web.bind.annotation.GetMapping("/seed-all-stocks")
+    @PostMapping("/seed-all-stocks")
+    public ResponseEntity<String> seedAllStocks() {
+        int count = stockCatalogSeederService.seedAllCatalogStocks();
+        return ResponseEntity.ok("Successfully seeded " + count + " new stocks across all 6 markets into Nexora!");
+    }
 
     @PostMapping("/seed-price-history")
     public ResponseEntity<String> seedPriceHistory() {

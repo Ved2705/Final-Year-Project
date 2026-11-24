@@ -29,7 +29,7 @@ public class DataSeederService implements CommandLineRunner {
     private final DividendRepository dividendRepository;
     private final NotificationRepository notificationRepository;
     private final PasswordEncoder passwordEncoder;
-    private final javax.sql.DataSource dataSource;
+    private final StockCatalogSeederService stockCatalogSeederService;
 
     @Override
     @Transactional
@@ -41,24 +41,8 @@ public class DataSeederService implements CommandLineRunner {
         }
 
         if (stockRepository.count() < 25) {
-            seedExpandedMarketCatalog();
-        }
-    }
-
-    private void seedExpandedMarketCatalog() {
-        log.info("Expanding market catalog: Seeding 120 stocks across AI, TECH, FINTECH, HEALTHCARE, EDTECH, ECOMMERCE...");
-        try {
-            org.springframework.core.io.support.ResourcePatternResolver resolver = new org.springframework.core.io.support.PathMatchingResourcePatternResolver();
-            org.springframework.core.io.Resource resource = resolver.getResource("classpath:db/seed_120_stocks.sql");
-            if (resource.exists()) {
-                org.springframework.jdbc.datasource.init.ResourceDatabasePopulator populator =
-                        new org.springframework.jdbc.datasource.init.ResourceDatabasePopulator(resource);
-                populator.setContinueOnError(true);
-                populator.execute(dataSource);
-                log.info("Successfully seeded 120 market stocks and price histories!");
-            }
-        } catch (Exception e) {
-            log.error("Failed to execute seed_120_stocks.sql: {}", e.getMessage());
+            log.info("Auto-seeding full stock catalog (120 stocks across AI, TECH, FINTECH, HEALTHCARE, EDTECH, ECOMMERCE)...");
+            stockCatalogSeederService.seedAllCatalogStocks();
         }
     }
 
