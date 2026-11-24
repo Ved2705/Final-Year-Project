@@ -5,13 +5,16 @@ import com.nexora.dto.discovery.PortfolioSummaryDTO;
 import com.nexora.dto.discovery.RecommendationDTO;
 import com.nexora.dto.discovery.ScoreBreakdownDTO;
 import com.nexora.entity.Instrument;
+import com.nexora.entity.Stock;
 import com.nexora.repository.InstrumentRepository;
+import com.nexora.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,11 +22,22 @@ import java.util.*;
 public class RecommendationScoringService {
 
     private final InstrumentRepository instrumentRepository;
+    private final StockRepository stockRepository;
     private final MarketDataService marketDataService;
     private final PortfolioExposureService portfolioExposureService;
 
     public List<RecommendationDTO> evaluateAndRankCandidates(AnalysisRequestDTO request, Long userId) {
-        List<Instrument> allInstruments = instrumentRepository.findByInstrumentStatus(Instrument.InstrumentStatus.ACTIVE);
+        // Strictly consider only stocks active on the Nexora platform website
+        Set<String> platformActiveSymbols = stockRepository.findByStatus(Stock.StockStatus.ACTIVE)
+                .stream()
+                .map(s -> s.getSymbol().toUpperCase())
+                .collect(Collectors.toSet());
+
+        List<Instrument> allInstruments = instrumentRepository.findByInstrumentStatus(Instrument.InstrumentStatus.ACTIVE)
+                .stream()
+                .filter(inst -> platformActiveSymbols.contains(inst.getSymbol().toUpperCase()) || "NEXORA".equalsIgnoreCase(inst.getExchange()))
+                .filter(inst -> !"NSE".equalsIgnoreCase(inst.getExchange()) && !"BSE".equalsIgnoreCase(inst.getExchange()))
+                .collect(Collectors.toList());
         List<RecommendationDTO> evaluated = new ArrayList<>();
 
         List<String> targetIndustries = request.getIndustries() != null && !request.getIndustries().isEmpty()

@@ -1,23 +1,22 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   IoSparkles, IoWarningOutline, IoCheckmarkCircleOutline,
   IoBookmarkOutline, IoBookmark, IoStatsChartOutline, IoSearchOutline,
   IoRefreshOutline, IoChatbubbleEllipsesOutline, IoCloseOutline,
   IoChevronForwardOutline, IoShieldCheckmarkOutline, IoGitCompareOutline,
-  IoHelpCircleOutline, IoSendOutline
+  IoHelpCircleOutline, IoSendOutline, IoTrendingUpOutline
 } from 'react-icons/io5';
 import { aiDiscoveryAPI, aiAssistantAPI, watchlistAPI, portfolioInsightsAPI } from '../../services/api';
 import './AIDiscovery.css';
 
 const INDUSTRIES = [
-  { id: 'Information Technology', label: 'Information Technology', icon: '💻' },
-  { id: 'Banking & Financial Services', label: 'Banking & Finance', icon: '🏦' },
-  { id: 'Healthcare', label: 'Healthcare & Pharma', icon: '🏥' },
-  { id: 'Automobiles', label: 'Automobiles & EV', icon: '🚗' },
-  { id: 'Consumer Goods', label: 'Consumer Goods', icon: '🛍️' },
-  { id: 'Energy', label: 'Energy & Renewables', icon: '⚡' },
-  { id: 'Industrials', label: 'Industrials & Infra', icon: '🏗️' },
-  { id: 'Telecommunications', label: 'Telecommunications', icon: '📡' },
+  { id: 'AI', label: 'Artificial Intelligence (AI)', icon: '🤖' },
+  { id: 'TECH', label: 'Technology & Cloud', icon: '💻' },
+  { id: 'FINTECH', label: 'FinTech & Payments', icon: '💳' },
+  { id: 'HEALTHCARE', label: 'Healthcare & Biotech', icon: '🏥' },
+  { id: 'EDTECH', label: 'EdTech & Learning', icon: '🎓' },
+  { id: 'ECOMMERCE', label: 'E-Commerce & D2C', icon: '🛍️' },
 ];
 
 const RISK_LEVELS = [
@@ -678,6 +677,15 @@ const AIDiscovery = () => {
                       {isWatchlisted ? <IoBookmark /> : <IoBookmarkOutline />}
                       <span>{isWatchlisted ? 'Watchlisted' : 'Watchlist'}</span>
                     </button>
+
+                    <Link
+                      to={`/investor/stock/${rec.symbol}`}
+                      className="action-btn-secondary trade-link-btn"
+                      style={{ textDecoration: 'none', color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.4)' }}
+                    >
+                      <IoTrendingUpOutline />
+                      <span>Trade</span>
+                    </Link>
                   </div>
                 </div>
               );
